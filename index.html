@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>An Evening For Two</title>
+<style>
+  @font-face { font-family: 'Beau Rivage'; src: url('fonts/BeauRivage-Regular.ttf') format('truetype'); }
+  @font-face { font-family: 'Cormorant SC'; src: url('fonts/CormorantSC-Medium.ttf') format('truetype'); font-weight: 500; }
+  @font-face { font-family: 'EB Garamond'; src: url('fonts/EBGaramond.ttf') format('truetype'); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { background: #1A130D; }
+  body {
+    background: #1A130D;
+    font-family: 'EB Garamond', serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+
+  .wrap { max-width: 420px; text-align: center; }
+
+  .eyebrow {
+    font-family: 'Cormorant SC', serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: rgba(184,146,74,0.65);
+  }
+
+  h1 {
+    font-family: 'Beau Rivage', cursive;
+    font-size: 44px;
+    color: #E8D9BE;
+    margin-top: 10px;
+  }
+
+  .links {
+    margin-top: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  a.link-card {
+    display: block;
+    padding: 18px 20px;
+    border: 0.6pt solid rgba(184,146,74,0.4);
+    border-radius: 6px;
+    color: #E8D9BE;
+    text-decoration: none;
+    font-family: 'Cormorant SC', serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 14px;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  a.link-card:hover, a.link-card:active {
+    border-color: rgba(220,180,110,0.75);
+    background: rgba(245,237,227,0.04);
+  }
+
+  .note {
+    margin-top: 30px;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: rgba(201,184,154,0.45);
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">AN EVENING FOR TWO</div>
+    <h1>The Map of Us</h1>
+
+    <div class="links">
+      <a class="link-card" href="01_something_is_coming.html">I &nbsp;&middot;&nbsp; Something Is Coming</a>
+      <a class="link-card" href="02_room_service.html">II &nbsp;&middot;&nbsp; Room Service</a>
+      <a class="link-card" href="03_find_aron.html">III &nbsp;&middot;&nbsp; Find Aron</a>
+    </div>
+
+    <div class="note">for personal use only &middot; not indexed</div>
+  </div>
+</body>
+</html>

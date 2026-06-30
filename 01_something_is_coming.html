@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>•</title>
+<style>
+  @font-face { font-family: 'Beau Rivage'; src: url('fonts/BeauRivage-Regular.ttf') format('truetype'); }
+  @font-face { font-family: 'Cormorant SC'; src: url('fonts/CormorantSC-Medium.ttf') format('truetype'); font-weight: 500; }
+  @font-face { font-family: 'Cormorant SC'; src: url('fonts/CormorantSC-SemiBold.ttf') format('truetype'); font-weight: 600; }
+  @font-face { font-family: 'Cormorant SC'; src: url('fonts/CormorantSC-Bold.ttf') format('truetype'); font-weight: 700; }
+  @font-face { font-family: 'EB Garamond'; src: url('fonts/EBGaramond.ttf') format('truetype'); }
+  @font-face { font-family: 'EB Garamond'; src: url('fonts/EBGaramond-Italic.ttf') format('truetype'); font-style: italic; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: #14100C;
+    font-family: 'EB Garamond', serif;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .scene {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 40px 0;
+  }
+
+  /* dim lobby backdrop: paneled wall, low light */
+  .scene::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 900px 700px at 50% 30%, rgba(120,90,55,0.25) 0%, transparent 65%),
+      linear-gradient(180deg, #1C1611 0%, #120D09 60%, #0B0805 100%);
+  }
+
+  /* faint vertical wall paneling */
+  .panel {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 0.5px;
+    background: rgba(184,146,74,0.07);
+  }
+
+  /* flickering chandelier glow, top center */
+  .chandelier-glow {
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(220,180,110,0.35) 0%, rgba(220,180,110,0.08) 45%, transparent 70%);
+    animation: flicker 5s infinite ease-in-out;
+    pointer-events: none;
+  }
+  @keyframes flicker {
+    0%, 100% { opacity: 0.85; }
+    8% { opacity: 0.5; }
+    9% { opacity: 0.9; }
+    35% { opacity: 0.7; }
+    52% { opacity: 1; }
+    78% { opacity: 0.6; }
+  }
+
+  /* chandelier silhouette, simple ornamental SVG */
+  .chandelier {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    opacity: 0.55;
+    animation: sway 7s infinite ease-in-out;
+    transform-origin: top center;
+  }
+  @keyframes sway {
+    0%, 100% { transform: translateX(-50%) rotate(-0.6deg); }
+    50% { transform: translateX(-50%) rotate(0.6deg); }
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #C9B89A;
+    max-width: 560px;
+    padding: 0 30px;
+  }
+
+  .eyebrow {
+    font-family: 'Cormorant SC', serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: rgba(184,146,74,0.65);
+    opacity: 0;
+    animation: fadeIn 2.5s ease forwards;
+    animation-delay: 0.4s;
+  }
+
+  .clock-line {
+    font-family: 'Cormorant SC', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: rgba(184,146,74,0.5);
+    margin-top: 14px;
+    opacity: 0;
+    animation: fadeIn 2.5s ease forwards;
+    animation-delay: 1s;
+  }
+  .clock-line span {
+    display: inline-block;
+    min-width: 0.6em;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* the riddle, revealed faintly, no explanation */
+  .riddle {
+    margin-top: 44px;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.95;
+    color: rgba(201,184,154,0.78);
+    opacity: 0;
+    animation: fadeIn 3s ease forwards;
+    animation-delay: 2s;
+  }
+
+  .riddle .accent {
+    color: #B85C68;
+    font-style: italic;
+  }
+
+  /* a single bell element, interactive */
+  .bell-zone {
+    margin-top: 44px;
+    opacity: 0;
+    animation: fadeIn 2.5s ease forwards;
+    animation-delay: 3s;
+  }
+
+  .bell {
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .bell:active { transform: scale(0.92); }
+  .bell.rung { animation: ring 0.6s ease; }
+  @keyframes ring {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-12deg); }
+    40% { transform: rotate(10deg); }
+    60% { transform: rotate(-6deg); }
+    80% { transform: rotate(4deg); }
+  }
+
+  .bell-hint {
+    margin-top: 10px;
+    font-family: 'Cormorant SC', serif;
+    font-size: 9.5px;
+    letter-spacing: 2px;
+    color: rgba(184,146,74,0.4);
+    height: 14px;
+  }
+
+  /* faint do-not-disturb tag, hover reveals fragment */
+  .tag-zone {
+    margin-top: 50px;
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 2.5s ease forwards;
+    animation-delay: 3.8s;
+  }
+
+  .tag {
+    display: inline-block;
+    position: relative;
+    padding: 10px 22px;
+    border: 0.5px solid rgba(184,146,74,0.35);
+    border-radius: 1px;
+    font-family: 'Cormorant SC', serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(184,146,74,0.55);
+    cursor: default;
+    transition: border-color 0.4s ease, color 0.4s ease;
+  }
+  .tag:hover {
+    border-color: rgba(184,146,74,0.7);
+    color: rgba(220,180,110,0.85);
+  }
+
+  .tag-fragment {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    width: 300px;
+    margin-bottom: 14px;
+    display: block;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(201,184,154,0);
+    transition: color 0.6s ease;
+    pointer-events: none;
+  }
+  .tag:hover .tag-fragment {
+    color: rgba(201,184,154,0.7);
+  }
+
+  .footer-mark {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant SC', serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(184,146,74,0.25);
+    opacity: 0;
+    animation: fadeIn 3s ease forwards;
+    animation-delay: 4.5s;
+  }
+</style>
+</head>
+<body>
+
+  <div class="scene">
+
+    <div class="panel" style="left: 12%;"></div>
+    <div class="panel" style="left: 88%;"></div>
+
+    <div class="chandelier-glow"></div>
+    <svg class="chandelier" viewBox="0 0 140 90" fill="none">
+      <line x1="70" y1="0" x2="70" y2="18" stroke="#B8924A" stroke-width="0.6"/>
+      <circle cx="70" cy="22" r="3" fill="#B8924A" opacity="0.6"/>
+      <path d="M70 22 Q30 35 20 60" stroke="#B8924A" stroke-width="0.5" opacity="0.5"/>
+      <path d="M70 22 Q110 35 120 60" stroke="#B8924A" stroke-width="0.5" opacity="0.5"/>
+      <path d="M70 22 Q70 45 70 70" stroke="#B8924A" stroke-width="0.5" opacity="0.5"/>
+      <circle cx="20" cy="62" r="2" fill="#DCB874" opacity="0.8"/>
+      <circle cx="120" cy="62" r="2" fill="#DCB874" opacity="0.8"/>
+      <circle cx="70" cy="72" r="2.4" fill="#DCB874" opacity="0.9"/>
+    </svg>
+
+    <div class="content">
+
+      <div class="eyebrow">SOMETHING IS BEING ARRANGED</div>
+      <div class="clock-line"><span id="clockDots">· · ·</span></div>
+
+      <div class="riddle">
+        Let your hotel lobby emerge its mental doors<br>
+        with my beach house.<br><br>
+        Some rooms are not found, but returned to —<br>
+        the ones we thought we'd memorized,<br>
+        until a door we'd passed a hundred times<br>
+        opens onto someone new.<br><br>
+        At <span class="accent">night</span>, it's coming.<br>
+        The question was never how well you know someone.<br>
+        It was whether you're still willing to find out.
+      </div>
+
+      <div class="bell-zone">
+        <svg class="bell" id="bellIcon" viewBox="0 0 64 64" fill="none">
+          <path d="M32 8c-9 0-15 7-15 17v10l-6 10h42l-6-10V25c0-10-6-17-15-17z" stroke="#B8924A" stroke-width="1.4" fill="rgba(184,146,74,0.06)"/>
+          <circle cx="32" cy="50" r="3" fill="none" stroke="#B8924A" stroke-width="1.2"/>
+          <circle cx="32" cy="8" r="2" fill="#B8924A"/>
+        </svg>
+        <div class="bell-hint" id="bellHint"></div>
+      </div>
+
+      <div class="tag-zone">
+        <span class="tag">DO NOT DISTURB<span class="tag-fragment">"...until the hour turns, and the lobby empties, and someone finally arrives."</span></span>
+      </div>
+
+    </div>
+
+    <div class="footer-mark">PATIENCE IS PART OF THE EVENING</div>
+
+  </div>
+
+<script>
+  const bell = document.getElementById('bellIcon');
+  const bellHint = document.getElementById('bellHint');
+  const hints = ["...", "no one at the desk yet", "...", "try again later"];
+  let ringCount = 0;
+
+  bell.addEventListener('click', () => {
+    bell.classList.remove('rung');
+    void bell.offsetWidth;
+    bell.classList.add('rung');
+    bellHint.textContent = hints[ringCount % hints.length];
+    ringCount++;
+  });
+
+  // subtle clock dot pulse to imply waiting, not a real countdown
+  const dots = document.getElementById('clockDots');
+  let dotState = 0;
+  setInterval(() => {
+    dotState = (dotState + 1) % 4;
+    dots.textContent = ['·', '· ·', '· · ·', '· · · ·'][dotState];
+  }, 1400);
+</script>
+
+</body>
+</html>
